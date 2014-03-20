@@ -9,6 +9,15 @@ image.
 
 `/srv/seafile` is exposed as a volume, you'll absolutely need to bind a volume.
 
+## Known Issues
+
+### WebDAV
+
+This image does not support WebDAV. It seems like the guys over at Seafile
+are distributing WsgiDAV with a custom backend for Seafile with the 
+pre-compiled download of Seafile. I can't find any of that code in their
+Github repos. I've opened [an issue](https://github.com/haiwen/seafile/issues/565) 
+on this.
 
 ## Usage
 
@@ -27,6 +36,7 @@ $ docker run -v /path/to/data:/srv/seafile --entrypoint /opt/scripts/seahub_setu
 $ docker run -t -i -v /path/to/data:/srv/seafile --entrypoint /opt/scripts/seafile_setup.sh jprjr/seafile
 # Afterwards, you'll probably want to explore /path/to/data and change configuration settings.
 # Most importantly the server addresses for your particular proxy and whatnot.
+```
 
 
 ### Run in foreground

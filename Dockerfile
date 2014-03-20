@@ -17,6 +17,20 @@ RUN mkdir /tmp/packer && \
     makepkg --asroot -i --noconfirm >/dev/null 2>/dev/null && \
     cd / && rm -rf /tmp/packer
 
+RUN packer -S --quiet --noconfirm --noedit libsearpc libevent libzdb jansson vala libldap >/dev/null 2>/dev/null
+
+# patch ccnet PKGBUILD to support ldap
+RUN mkdir /tmp/patches
+ADD patches/enable_ldap.patch /tmp/patches/enable_ldap.patch
+
+RUN mkdir /tmp/ccnet && \
+    cd /tmp/ccnet && \
+    packer -G ccnet && \
+    cd ccnet && \
+    patch -i /tmp/patches/enable_ldap.patch && \
+    makepkg --asroot -i --noconfirm && \
+    cd / && rm -rf /tmp/ccnet && rm -rf /tmp/patches
+
 RUN packer -S --noconfirm --noedit seafile-server 
 
 # make user
@@ -33,11 +47,11 @@ RUN pacman -Ru --noconfirm base-devel
 RUN pacman -R --noconfirm $(pacman -Qdtq)
 RUN paccache -rk0
 RUN pacman -Scc --noconfirm
-
+ 
 WORKDIR /srv/seafile
 USER seafile
 VOLUME /srv/seafile
- 
+  
 ENTRYPOINT /opt/scripts/seafile_start.sh
 
 # Please look at the readme! There's some interactive setup you'll need to do!

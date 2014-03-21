@@ -17,20 +17,6 @@ RUN mkdir /tmp/packer && \
     makepkg --asroot -i --noconfirm >/dev/null 2>/dev/null && \
     cd / && rm -rf /tmp/packer
 
-RUN packer -S --quiet --noconfirm --noedit libsearpc libevent libzdb jansson vala libldap >/dev/null 2>/dev/null
-
-# patch ccnet PKGBUILD to support ldap
-RUN mkdir /tmp/patches
-ADD patches/enable_ldap.patch /tmp/patches/enable_ldap.patch
-
-RUN mkdir /tmp/ccnet && \
-    cd /tmp/ccnet && \
-    packer -G ccnet && \
-    cd ccnet && \
-    patch -i /tmp/patches/enable_ldap.patch && \
-    makepkg --asroot -i --noconfirm && \
-    cd / && rm -rf /tmp/ccnet && rm -rf /tmp/patches
-
 RUN packer -S --noconfirm --noedit seafile-server 
 
 # make user

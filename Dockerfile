@@ -2,7 +2,7 @@ FROM jprjr/arch
 
 MAINTAINER John Regan <john@jrjrtech.com>
 
-RUN pacman -Syyu --noconfirm --quiet > /dev/null
+RUN pacman -Syy --noconfirm --quiet > /dev/null
 
 # things that can be removed later
 RUN pacman -S --noconfirm --quiet --needed base-devel > /dev/null 2>/dev/null
@@ -17,7 +17,7 @@ RUN mkdir /tmp/packer && \
     makepkg --asroot -i --noconfirm >/dev/null 2>/dev/null && \
     cd / && rm -rf /tmp/packer
 
-RUN packer -S --noconfirm --noedit seafile-server 
+RUN packer -S --noconfirm --noedit seafile-server > /dev/null 2>/dev/null
 
 # make user
 RUN useradd -m -d /srv/seafile -s /bin/false seafile
